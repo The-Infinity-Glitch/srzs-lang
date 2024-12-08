@@ -1,0 +1,11 @@
+[package]
+name = "srzs-lang"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = ["utils"]
+resolver = "2"
+
+[dependencies]
+utils = { path = "utils" }

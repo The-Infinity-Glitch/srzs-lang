@@ -1,0 +1,20 @@
+use some::module
+
+pub let public_imutable_variable = 10
+pub let mut public_mutable_variable = 10
+
+ns a_namespace {
+    fn function() -> void {
+        some::module::some_function("Some value", 10, 2)
+
+        other_function(10)
+    }
+
+    fn other_function(arg: int) -> int {
+        return arg * 2
+    }
+}
+
+fn another_function() -> void {
+    a_namespace::function()
+}

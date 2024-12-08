@@ -1,0 +1,8 @@
+use std::io;
+
+pub let public_var = 10;
+
+-# Just a simple function #-
+fn ready() -> void {
+    io::println("Hello, World!");
+}
