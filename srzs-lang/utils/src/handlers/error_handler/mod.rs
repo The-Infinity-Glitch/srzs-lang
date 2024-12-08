@@ -1,4 +1,4 @@
-use crate::handlers::message_handler;
+use crate::{handlers::message_handler, types};
 
 #[derive(Debug, Clone)]
 pub enum ErrorCode {
@@ -20,13 +20,15 @@ impl BaseError {
 #[derive(Debug, Clone)]
 pub struct ScriptError {
     base: BaseError,
-    line: usize,
-    column: usize,
+    position: types::others::Position,
 }
 
 impl ScriptError {
     pub fn new(base: BaseError, line: usize, column: usize) -> Self {
-        Self { base, line, column }
+        Self {
+            base,
+            position: types::others::Position::new(line, column),
+        }
     }
 }
 

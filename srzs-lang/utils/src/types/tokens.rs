@@ -1,4 +1,5 @@
 use crate::frontend::lexer::{new_line_callback, word_callback};
+use crate::types;
 use logos::Logos;
 
 /// All types of token of the laguage
@@ -227,8 +228,7 @@ pub enum TokenType {
 pub struct Token {
     pub token_type: TokenType,
     pub token_value: String,
-    pub line: usize,
-    pub column: usize,
+    pub position: types::others::Position,
 }
 
 impl Token {
@@ -236,8 +236,7 @@ impl Token {
         Self {
             token_type: r#type,
             token_value: value.to_string(),
-            line,
-            column,
+            position: types::others::Position::new(line, column),
         }
     }
 }

@@ -1,5 +1,5 @@
 use crate::handlers::{error_handler, message_handler};
-use crate::types::tokens;
+use crate::types::*;
 use logos::Logos;
 
 /// Update the line count and the char index
@@ -12,11 +12,6 @@ pub fn new_line_callback(lex: &mut logos::Lexer<tokens::TokenType>) {
 pub fn word_callback(lex: &mut logos::Lexer<tokens::TokenType>) {
     let line = lex.extras.0;
     let column = lex.span().start - lex.extras.1;
-}
-
-struct TokenPosition {
-    line: usize,
-    column: usize,
 }
 
 #[derive(Debug, Clone)]
@@ -36,7 +31,7 @@ impl Lexer {
     /// Lex the input and return a vector of tokens and errors
     pub fn lex(&mut self, input: &str) {
         let mut lex = tokens::TokenType::lexer(input);
-        let mut token_position = TokenPosition { line: 0, column: 0 };
+        let mut token_position = others::Position { line: 0, column: 0 };
 
         while let Some(token_type) = lex.next() {
             match token_type {
