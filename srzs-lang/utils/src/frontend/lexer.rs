@@ -16,8 +16,8 @@ pub fn word_callback(lex: &mut logos::Lexer<tokens::TokenType>) {
 
 #[derive(Debug, Clone)]
 pub struct Lexer {
-    tokens: Vec<tokens::Token>,
-    errors: Vec<error_handler::Error>,
+    pub tokens: Vec<tokens::Token>,
+    pub errors: Vec<error_handler::Error>,
 }
 
 impl Lexer {

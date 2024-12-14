@@ -23,8 +23,8 @@ pub enum Statement {
         start: types::others::Position,
         name: String,
         r#type: types::built_in_types::BuiltInTypes,
-        params: Option<Vec<FuncParam>>,
-        body: Option<Box<Vec<Statement>>>,
+        params: Vec<FuncParam>,
+        body: Box<Vec<Statement>>,
     },
     If {
         start: types::others::Position,

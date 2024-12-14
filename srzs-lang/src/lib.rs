@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use utils::frontend::lexer;
+use utils::frontend::*;
 
 pub fn load_source(source: &str) {
     use std::fs::File;
@@ -18,5 +18,10 @@ pub fn load_source(source: &str) {
     let mut lexer = lexer::Lexer::new();
     lexer.lex(data.as_str());
 
-    dbg!(lexer);
+    dbg!(&lexer);
+
+    let mut parser = parser::Parser::new(lexer.tokens);
+    parser.parse_tokens();
+
+    dbg!(parser);
 }

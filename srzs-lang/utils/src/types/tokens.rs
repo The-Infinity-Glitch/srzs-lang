@@ -110,7 +110,7 @@ pub enum TokenType {
     TypeFloat,
 
     #[token("bool", word_callback)]
-    TypeBoll,
+    TypeBool,
 
     #[token("char", word_callback)]
     TypeChar,
