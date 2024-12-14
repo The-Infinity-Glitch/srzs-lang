@@ -6,10 +6,10 @@ pub enum Statement {
         start: types::others::Position,
         body: Box<Vec<Statement>>,
     },
-    VariableDeclaration {
+    LetDeclaration {
         start: types::others::Position,
         name: String,
-        kind: VarDeclarationKind,
+        kind: LetDeclarationKind,
         r#type: types::built_in_types::BuiltInTypes,
         value: Option<Expression>,
     },
@@ -86,7 +86,7 @@ pub struct FuncParam {
 }
 
 #[derive(Debug, Clone)]
-pub enum VarDeclarationKind {
+pub enum LetDeclarationKind {
     Mutable,
     Immutable,
 }

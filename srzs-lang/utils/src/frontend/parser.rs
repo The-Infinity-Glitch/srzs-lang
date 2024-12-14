@@ -76,6 +76,114 @@ impl Parser {
         }
     }
 
+    // Parse and return a let statement
+    fn parse_let_statement(&mut self) -> Option<types::parse_nodes::Statement> {
+        // "let" token <- used to get the start of the statement
+        let let_token = self.current().to_owned();
+        self.advance();
+
+        // The let kind: mutable or immutable <- immutable default
+        let mut kind: types::parse_nodes::LetDeclarationKind =
+            types::parse_nodes::LetDeclarationKind::Immutable;
+
+        match self.current().token_type {
+            types::tokens::TokenType::KwMut => {
+                kind = types::parse_nodes::LetDeclarationKind::Mutable;
+                self.advance();
+            }
+            types::tokens::TokenType::Identifier => {}
+            _ => {
+                self.errors.insert(
+                    self.errors.len(),
+                    handlers::error_handler::Error::expected_error(
+                        "\"mut\" or a identifier",
+                        &self.current(),
+                        handlers::message_handler::Issuer::Parser,
+                    ),
+                );
+                return None;
+            }
+        };
+
+        // The let statement name
+        let name = match handlers::error_handler::Error::expected_or_error(
+            "a identifier",
+            &types::tokens::TokenType::Identifier,
+            self.current(),
+            handlers::message_handler::Issuer::Parser,
+        ) {
+            Ok(name) => name.token_value,
+            Err(error) => {
+                self.errors.insert(self.errors.len(), error);
+                return None;
+            }
+        };
+
+        self.advance();
+
+        // ":" or ";" after the name
+        match self.current().token_type {
+            types::tokens::TokenType::Colon => {
+                self.advance();
+            }
+            types::tokens::TokenType::SemiColon => {
+                return Some(types::parse_nodes::Statement::LetDeclaration {
+                    start: let_token.position,
+                    name,
+                    kind,
+                    r#type: types::built_in_types::BuiltInTypes::Any,
+                    value: None,
+                });
+            }
+            _ => {
+                self.errors.insert(
+                    self.errors.len(),
+                    handlers::error_handler::Error::expected_error(
+                        "a explicity type or the end of let statement",
+                        &self.current(),
+                        handlers::message_handler::Issuer::Parser,
+                    ),
+                );
+                return None;
+            }
+        };
+
+        // The let statement type
+        let r#type = match self.get_type() {
+            Ok(r#type) => r#type,
+            Err(error) => {
+                self.errors.insert(self.errors.len(), error);
+                return None;
+            }
+        };
+
+        self.advance();
+
+        // A expression attribution or the end of statement
+        match self.current().token_type {
+            types::tokens::TokenType::SemiColon => {
+                return Some(types::parse_nodes::Statement::LetDeclaration {
+                    start: let_token.position,
+                    name,
+                    kind,
+                    r#type,
+                    value: None,
+                });
+            }
+            _ => {
+                self.errors.insert(
+                    self.errors.len(),
+                    handlers::error_handler::Error::expected_error(
+                        "a explicity type or the end of let statement",
+                        &self.current(),
+                        handlers::message_handler::Issuer::Parser,
+                    ),
+                );
+                return None;
+            }
+        };
+    }
+
     /// Parse and return a paremeter statement vector <- (param_name: type, ...)
     fn parse_params_statement(&mut self) -> Option<Vec<types::parse_nodes::FuncParam>> {
         // "("
@@ -124,6 +232,8 @@ impl Parser {
                 }
             };
 
+            self.advance();
+
             // param_name: "type" <- The type of the parameter
             let r#type = match self.get_type() {
                 Ok(r#type) => r#type,
@@ -132,6 +242,8 @@ impl Parser {
                     return None;
                 }
             };
+
+            self.advance();
 
             // The glue
             param = types::parse_nodes::FuncParam { name, r#type };
@@ -220,7 +332,7 @@ impl Parser {
 
     /// Parse and return a function statement -> fn function_name(param_name: type, ...) -> type {...}
     fn parse_function_satement(&mut self) -> Option<types::parse_nodes::Statement> {
-        // fn <- token
+        // "fn" token <- used to get the start of the statement
         let fn_token = self.current().to_owned();
         self.advance();
 
@@ -332,6 +444,7 @@ impl Parser {
             // Parse and return a statement
             let ast_node: Option<types::parse_nodes::Statement> = match &self.current_type() {
                 types::tokens::TokenType::KwFn => self.parse_function_satement(),
+                types::tokens::TokenType::KwLet => self.parse_let_statement(),
                 _ => {
                     handlers::error_handler::Error::expected_error(
                         "a statement",
@@ -348,6 +461,8 @@ impl Parser {
             } else {
                 break;
             }
+
+            self.advance();
         }
     }
 }

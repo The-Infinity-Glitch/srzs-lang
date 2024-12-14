@@ -1,0 +1,11 @@
+let not_initialized_immutable_variable;
+let initialized_immutable_variable = 10;
+
+let not_initialized_immutable_variable_with_explicity_value: int;
+let initialized_immutable_variable_with_explicity_value: int = 10;
+
+let mut not_initialized_mutable_variable;
+let mut initialized_mutable_variable = 10;
+
+let mut not_initialized_mutable_variable_with_explicity_value: int;
+let mut initialized_mutable_variable_with_explicity_value: int = 10;

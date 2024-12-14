@@ -60,7 +60,7 @@ pub enum TokenType {
     #[token("#-", word_callback)]
     CloseComment,
 
-    // Declaration keywords
+    // Keywords
     #[token("ns", word_callback)]
     KwNs,
 
@@ -82,7 +82,6 @@ pub enum TokenType {
     #[token("fn", word_callback)]
     KwFn,
 
-    // Logical keywords
     #[token("if", word_callback)]
     KwIf,
 
@@ -95,7 +94,6 @@ pub enum TokenType {
     #[token("is", word_callback)]
     KwIs,
 
-    // Special keywords
     #[token("return", word_callback)]
     KwReturn,
 
