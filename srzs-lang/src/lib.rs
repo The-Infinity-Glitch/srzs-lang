@@ -1,6 +1,8 @@
 use std::sync::Arc;
-
+use utils::backend::bytecode;
 use utils::frontend::*;
+mod module;
+mod runtime;
 
 pub fn load_source(source: &str) {
     use std::fs::File;
@@ -24,4 +26,18 @@ pub fn load_source(source: &str) {
     parser.parse_tokens();
 
     dbg!(parser);
+
+    let test_bytecode = bytecode::ByteCode {
+        code: vec![bytecode::Scope::Global(vec![
+            bytecode::ByteNode::Push(bytecode::Value::Int(10)),
+            bytecode::ByteNode::Push(bytecode::Value::Int(2)),
+            bytecode::ByteNode::Push(bytecode::Value::Int(3)),
+            bytecode::ByteNode::Pull((bytecode::ValueScope::Global, 0)),
+            bytecode::ByteNode::Pop(2),
+        ])],
+    };
+
+    let mut test_run = runtime::Runtime::new();
+    test_run.run_byte(test_bytecode);
+    dbg!(test_run);
 }
